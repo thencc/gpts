@@ -1,4 +1,4 @@
-export const hello = () => 'world';
+export const hello = (): string => 'world';
 
 // Python String.format adapted for TS + renamed inject
 export const inject = (input: string, ...args: any[]): string => {
@@ -7,14 +7,14 @@ export const inject = (input: string, ...args: any[]): string => {
 	return input.replace(/\{(\w*)\}/g, function (match, key) {
 		if (key === '') {
 			key = unkeyed_index;
-			unkeyed_index++
+			unkeyed_index++;
 		}
 		if (key == +key) {
 			return args[key] !== 'undefined'
 				? args[key]
 				: match;
 		} else {
-			for (var i = 0; i < args.length; i++) {
+			for (let i = 0; i < args.length; i++) {
 				if (typeof args[i] === 'object' && typeof args[i][key] !== 'undefined') {
 					return args[i][key];
 				}
