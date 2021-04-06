@@ -23,3 +23,6 @@ export const inject = (input: string, ...args: any[]): string => {
 		}
 	});
 };
+// used like...
+// let qwe = 'test {0} {1} and then some more';
+// qwe = inject(qwe, '123', '456');
