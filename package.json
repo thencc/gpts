@@ -1,0 +1,19 @@
+{
+	"name": "chronology-ts",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"/dist"
+	],
+	"scripts": {
+		"build": "tsc"
+	},
+	"devDependencies": {
+		"tsc": "^1.20150623.0"
+	},
+	"dependencies": {
+		"typescript": "^4.2.3"
+	}
+}
