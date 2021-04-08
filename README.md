@@ -22,3 +22,16 @@ also see `/demo`
 works in frontend + backend
 
 (depends on `node-fetch` for backend use to work)
+
+---
+
+import + use:
+(without npm)
+
+`package.json`
+```json
+	"dependencies": {
+		"gpt-ts": "thencc/gpt-ts",
+		...
+	},
+```
