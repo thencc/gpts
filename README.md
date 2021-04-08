@@ -1,15 +1,21 @@
 # gpt-ts
-gpt-3 / gpt-x typescript wrapper of REST api
-
+typescript wrapper for gpt-3 api (uses REST api)
 
 ---
 
+example:
 ```ts
 import { GpTs } from 'gpt-ts';
-const brains = new GpTs(OPENAI_APIKEY);
+const brain = new GpTs(OPENAI_APIKEY); // dont publish your api key!
 
-brains.search(...)
+const thoughts = brain.createCompletion('ada', {
+	prompt: 'whats for lunch?'
+});
+
+console.log(thoughts.choices[0].text); // "maybe a banana?"
 ```
+
+also see `/demo`
 
 ---
 
