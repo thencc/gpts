@@ -1,5 +1,21 @@
-
 export type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta';
+
+export type ListEnginesResponse = {
+	data: {
+		id: EngineId; // string;
+		object: 'engine'; // string;
+		owner: string;
+		ready: boolean;
+	}[],
+	object: 'list' // string;
+};
+
+export type RetrieveEngineResponse = {
+	id: EngineId;
+	object: 'engine'; // string;
+	owner: string; // 'openai';
+	ready: boolean;
+}
 
 export type CompletionRequest = {
 	prompt?: string | string[];
@@ -17,6 +33,19 @@ export type CompletionRequest = {
 	logit_bias?: any; // Record<string, number> // to tinker with
 };
 
+export type CompletionResponse = {
+	id: string;
+	object: 'text_completion'; // string;
+	created: number; // timestamp
+	model: string; // ex: 'davinci:2020-05-03'
+	choices: {
+		text: string;
+		index: number;
+		logprobs: null;
+		finish_reason: string; // 'length' | 'stop' etc...
+	}[];
+}
+
 // https://beta.openai.com/docs/api-reference/searches/create
 export type SearchRequest = {
 	documents?: string[];
@@ -25,6 +54,16 @@ export type SearchRequest = {
 	max_rerank?: number;
 	return_metadata?: boolean;
 };
+
+export type SearchResponse = {
+	data:
+	{
+		document: number; // index
+		object: 'search_result' // string;
+		score: number; // 215.412
+	}[];
+	object: 'list';
+}
 
 export type ClassificationRequest = {
 	model?: EngineId; // ID of the engine to use for completion
@@ -40,6 +79,20 @@ export type ClassificationRequest = {
 	return_prompt?: boolean;
 	return_metadata?: boolean;
 	expand?: string[];
+}
+
+export type ClassificationResponse = {
+	completion: string; // 'cmpl-2euN7lUVZ0d4RKbQqRV79IiiE6M1f',
+	label: string; // 'Negative',
+	model: string; // 'curie:2020-05-03',
+	object: 'classification';
+	search_model: EngineId;
+	selected_examples:
+	{
+		document: number;
+		label: string;
+		text: string;
+	}[];
 }
 
 export type AnswerRequest = {
@@ -61,3 +114,18 @@ export type AnswerRequest = {
 	return_prompt?: boolean;
 	expand?: string[];
 };
+
+export type AnswerResponse = {
+	answers: string[];
+	completion: string; // 'cmpl-2euVa1kmKUuLpSX600M41125Mo9NI',
+	model: string; // 'curie:2020-05-03',
+	object: 'answer';
+	search_model: EngineId;
+	selected_documents:
+	{
+		document: number;
+		text: string;
+	}[];
+}
+
+// TODO Files
