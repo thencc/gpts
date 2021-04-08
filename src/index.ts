@@ -5,7 +5,7 @@ import { AnswerRequest, ClassificationRequest, CompletionRequest, EngineId, Sear
 // in case this is not the web import fetch
 import fetch from 'node-fetch';
 
-export class Chronology {
+export class GpTs {
 	hello = 'world';
 	apiKey: string;
 	getHeaders = {
@@ -89,4 +89,4 @@ export class Chronology {
 	// TODO files
 	// https://beta.openai.com/docs/api-reference/files/list
 }
-export default Chronology;
+export default GpTs;
