@@ -1,0 +1,57 @@
+export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta';
+export declare type CompletionRequest = {
+    prompt?: string | string[];
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    n?: number;
+    stream?: boolean;
+    logprobs?: boolean;
+    echo?: boolean;
+    stop?: string | string[];
+    presence_penalty?: number;
+    frequency_penalty?: number;
+    best_of?: number;
+    logit_bias?: any;
+};
+export declare type SearchRequest = {
+    documents?: string[];
+    file?: string;
+    query: string;
+    max_rerank?: number;
+    return_metadata?: boolean;
+};
+export declare type ClassificationRequest = {
+    model?: EngineId;
+    query: string;
+    examples?: string[][];
+    file?: string;
+    labels?: string[];
+    search_model?: EngineId;
+    temperature?: number;
+    logprobs?: number;
+    max_examples?: number;
+    logit_bias?: any;
+    return_prompt?: boolean;
+    return_metadata?: boolean;
+    expand?: string[];
+};
+export declare type AnswerRequest = {
+    model?: EngineId;
+    question: string;
+    examples: string[][];
+    examples_context: string;
+    documents?: string[];
+    file?: string;
+    search_model?: EngineId;
+    max_rerank?: number;
+    temperature?: number;
+    logprobs?: number;
+    max_tokens?: number;
+    stop?: string | string[];
+    n?: number;
+    logit_bias?: any;
+    return_metadata?: boolean;
+    return_prompt?: boolean;
+    expand?: string[];
+};

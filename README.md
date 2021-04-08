@@ -5,8 +5,8 @@ gpt-3 / gpt-x typescript wrapper of REST api
 ---
 
 ```ts
-import { GptTs } from 'gpt-ts';
-const brains = new GptTs(OPENAI_APIKEY);
+import { GpTs } from 'gpt-ts';
+const brains = new GpTs(OPENAI_APIKEY);
 
 brains.search(...)
 ```
