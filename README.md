@@ -15,4 +15,4 @@ brains.search(...)
 
 works in frontend + backend
 
-(backend via node-fetch)
+(depends on `node-fetch` for backend use to work)
