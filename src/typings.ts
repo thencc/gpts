@@ -1,21 +1,24 @@
 export type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta';
 
+export type Engine = {
+	id: EngineId;
+	object: 'engine';
+	owner: string; // 'openai',
+	ready: boolean;
+	// undocumented:
+	created: null,
+	max_replicas: null,
+	permissions: null,
+	ready_replicas: null,
+	replicas: null
+}
+
 export type ListEnginesResponse = {
-	data: {
-		id: EngineId; // string;
-		object: 'engine'; // string;
-		owner: string;
-		ready: boolean;
-	}[],
+	data: Engine[],
 	object: 'list' // string;
 };
 
-export type RetrieveEngineResponse = {
-	id: EngineId;
-	object: 'engine'; // string;
-	owner: string; // 'openai';
-	ready: boolean;
-}
+export type RetrieveEngineResponse = Engine
 
 export type CompletionRequest = {
 	prompt?: string | string[];
@@ -56,13 +59,16 @@ export type SearchRequest = {
 };
 
 export type SearchResponse = {
-	data:
-	{
-		document: number; // index
-		object: 'search_result' // string;
-		score: number; // 215.412
-	}[];
+	data: SearchResult[];
 	object: 'list';
+	// undocumented
+	model: string; // 'ada:2020-05-03'
+}
+
+export type SearchResult = {
+	document: number; // index
+	object: 'search_result' // unique identifier for object type
+	score: number; // 215.412
 }
 
 export type ClassificationRequest = {

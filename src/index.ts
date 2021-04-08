@@ -3,10 +3,16 @@ export * from './typings'; // for use elswehere
 
 import {
 	AnswerRequest,
+	AnswerResponse,
 	ClassificationRequest,
+	ClassificationResponse,
 	CompletionRequest,
+	CompletionResponse,
 	EngineId,
-	SearchRequest
+	ListEnginesResponse,
+	RetrieveEngineResponse,
+	SearchRequest,
+	SearchResponse
 } from './typings';
 
 // in case this is not the web import fetch
@@ -30,24 +36,48 @@ export class GpTs {
 		this.postHeaders.Authorization = `Bearer ${this.apiKey}`;
 	}
 
-	async listEngines(): Promise<any> {
-		return await fetch('https://api.openai.com/v1/engines', {
+	async listEngines(): Promise<ListEnginesResponse> {
+		const res = await fetch('https://api.openai.com/v1/engines', {
 			headers: this.getHeaders
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: ListEnginesResponse = await res.json();
+			return json;
+		}
 	}
 
-	async retrieveEngine(engineId: EngineId): Promise<any> {
-		return await fetch(`https://api.openai.com/v1/engines/${engineId}`, {
+	async retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse> {
+		const res = await fetch(`https://api.openai.com/v1/engines/${engineId}`, {
 			headers: this.getHeaders
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: RetrieveEngineResponse = await res.json();
+			return json;
+		}
 	}
 
-	async createCompletion(engineId: EngineId, options: CompletionRequest): Promise<any> {
-		return await fetch(`https://api.openai.com/v1/engines/${engineId}/completions`, {
+	async createCompletion(engineId: EngineId, options: CompletionRequest): Promise<CompletionResponse> {
+		const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/completions`, {
 			body: JSON.stringify(options),
 			headers: this.postHeaders,
 			method: 'POST'
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: CompletionResponse = await res.json();
+			return json;
+		}
 	}
 
 	// TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
@@ -56,24 +86,40 @@ export class GpTs {
 		return;
 	}
 
-	async createSearch(engineId: EngineId, options: SearchRequest): Promise<any> {
-		return await fetch(`https://api.openai.com/v1/engines/${engineId}/search`, {
+	async createSearch(engineId: EngineId, options: SearchRequest): Promise<SearchResponse> {
+		const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/search`, {
 			body: JSON.stringify(options),
 			headers: this.postHeaders,
 			method: 'POST'
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: SearchResponse = await res.json();
+			return json;
+		}
 	}
 
-	async createClassification(engineId: EngineId, options: ClassificationRequest): Promise<any> {
+	async createClassification(engineId: EngineId, options: ClassificationRequest): Promise<ClassificationResponse> {
 		const bod = {
 			model: engineId,
 			...options
 		};
-		return await fetch('https://api.openai.com/v1/classifications', {
+		const res = await fetch('https://api.openai.com/v1/classifications', {
 			body: JSON.stringify(bod),
 			headers: this.postHeaders,
 			method: 'POST'
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: ClassificationResponse = await res.json();
+			return json;
+		}
 	}
 
 	// async createAnswer(engineId: EngineId, options: Partial<AnswerRequest>): Promise<any> {
@@ -81,16 +127,24 @@ export class GpTs {
 	// 		model: engineId,
 	// 		...options
 	// 	} as AnswerRequest;
-	async createAnswer(engineId: EngineId, options: AnswerRequest): Promise<any> {
+	async createAnswer(engineId: EngineId, options: AnswerRequest): Promise<AnswerResponse> {
 		const bod = {
 			model: engineId,
 			...options
 		};
-		return await fetch('https://api.openai.com/v1/answers', {
+		const res = await fetch('https://api.openai.com/v1/answers', {
 			body: JSON.stringify(bod),
 			headers: this.postHeaders,
 			method: 'POST'
 		});
+		if (res.status == 401) {
+			throw 'no api auth';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: AnswerResponse = await res.json();
+			return json;
+		}
 	}
 
 	// TODO files

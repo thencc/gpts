@@ -11,7 +11,13 @@ import { GpTs } from '../src';
 	const c = new GpTs(openai_apiKey);
 	// console.log('c', c);
 
-	// const s = await c.listEngines();
+	// try {
+	// 	// const s = await c.listEngines();
+	// 	const s = await c.retrieveEngine('ada');
+	// 	console.log('s:', s);
+	// } catch (e) {
+	// 	console.log('err:', e);
+	// }
 
 	// const s = await c.createCompletion('ada', {
 	// 	prompt: 'whats for lunch?'
@@ -42,8 +48,6 @@ import { GpTs } from '../src';
 		'documents': ['Puppy A is happy.', 'Puppy B is sad.'],
 	});
 
-	// console.log('s', s);
-	const ss = await s.json();
-	console.log('ss', ss);
+	console.log('s', s);
 
 })();
