@@ -40,25 +40,55 @@ class GpTs {
     }
     listEngines() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield node_fetch_1.default('https://api.openai.com/v1/engines', {
+            const res = yield node_fetch_1.default('https://api.openai.com/v1/engines', {
                 headers: this.getHeaders
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
     retrieveEngine(engineId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}`, {
+            const res = yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}`, {
                 headers: this.getHeaders
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
     createCompletion(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}/completions`, {
+            const res = yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}/completions`, {
                 body: JSON.stringify(options),
                 headers: this.postHeaders,
                 method: 'POST'
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
     // TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
@@ -70,21 +100,41 @@ class GpTs {
     }
     createSearch(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}/search`, {
+            const res = yield node_fetch_1.default(`https://api.openai.com/v1/engines/${engineId}/search`, {
                 body: JSON.stringify(options),
                 headers: this.postHeaders,
                 method: 'POST'
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
     createClassification(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const bod = Object.assign({ model: engineId }, options);
-            return yield node_fetch_1.default('https://api.openai.com/v1/classifications', {
+            const res = yield node_fetch_1.default('https://api.openai.com/v1/classifications', {
                 body: JSON.stringify(bod),
                 headers: this.postHeaders,
                 method: 'POST'
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
     // async createAnswer(engineId: EngineId, options: Partial<AnswerRequest>): Promise<any> {
@@ -95,11 +145,21 @@ class GpTs {
     createAnswer(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const bod = Object.assign({ model: engineId }, options);
-            return yield node_fetch_1.default('https://api.openai.com/v1/answers', {
+            const res = yield node_fetch_1.default('https://api.openai.com/v1/answers', {
                 body: JSON.stringify(bod),
                 headers: this.postHeaders,
                 method: 'POST'
             });
+            if (res.status == 401) {
+                throw 'no api auth';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
         });
     }
 }
