@@ -2,7 +2,6 @@ export * from './utils';
 export * from './typings';
 import { AnswerRequest, ClassificationRequest, CompletionRequest, EngineId, SearchRequest } from './typings';
 export declare class GpTs {
-    hello: string;
     apiKey: string;
     getHeaders: {
         Authorization: string;

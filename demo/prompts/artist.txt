@@ -1,5 +1,0 @@
-A conversation between {0} and {1}. {1} is under the genre of {2} and made the song {3}.
-{1} was inspired by: {4}
-
-{0}: {5}
-{1}:

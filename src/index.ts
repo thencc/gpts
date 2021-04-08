@@ -1,12 +1,19 @@
 export * from './utils';
 export * from './typings'; // for use elswehere
-import { AnswerRequest, ClassificationRequest, CompletionRequest, EngineId, SearchRequest } from './typings';
+
+import {
+	AnswerRequest,
+	ClassificationRequest,
+	CompletionRequest,
+	EngineId,
+	SearchRequest
+} from './typings';
 
 // in case this is not the web import fetch
 import fetch from 'node-fetch';
 
 export class GpTs {
-	hello = 'world';
+	// hello = 'world';
 	apiKey: string;
 	getHeaders = {
 		Authorization: 'Bearer'

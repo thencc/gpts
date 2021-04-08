@@ -26,7 +26,6 @@ __exportStar(require("./typings"), exports); // for use elswehere
 const node_fetch_1 = require("node-fetch");
 class GpTs {
     constructor(apiKey) {
-        this.hello = 'world';
         this.getHeaders = {
             Authorization: 'Bearer'
         };

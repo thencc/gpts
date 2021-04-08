@@ -1,6 +1,6 @@
 {
 	"name": "gpt-ts",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "typescript wrapper for gpt-3 api",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
