@@ -61,10 +61,6 @@
 				"warn",
 				"single"
 			],
-			"indent": [
-				"warn",
-				"tab"
-			],
 			"@typescript-eslint/indent": [
 				"warn",
 				"tab"
