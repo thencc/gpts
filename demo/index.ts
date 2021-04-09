@@ -23,6 +23,9 @@ import { GpTs } from '../src';
 	// 	prompt: 'whats for lunch?'
 	// });
 
+	// hmmm, an empty completion why not
+	// const s = await c.createCompletion('ada');
+
 	// const s = await c.createSearch('ada', {
 	// 	documents: ['mango', 'apple', 'pear'],
 	// 	query: 'sweetest'

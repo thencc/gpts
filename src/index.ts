@@ -18,6 +18,8 @@ import {
 // in case this is not the web import fetch
 import fetch from 'node-fetch';
 
+// consideration: should required params be part of method args so options is always optional? (like completion endpoint)
+
 export class GpTs {
 	// hello = 'world';
 	apiKey: string;
@@ -64,9 +66,10 @@ export class GpTs {
 		}
 	}
 
-	async createCompletion(engineId: EngineId, options: CompletionRequest): Promise<CompletionResponse> {
+	// the completion endpoint is unique in that the options arg is optional
+	async createCompletion(engineId: EngineId, options?: CompletionRequest): Promise<CompletionResponse> {
 		const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/completions`, {
-			body: JSON.stringify(options),
+			body: JSON.stringify(options || {}),
 			headers: this.postHeaders,
 			method: 'POST'
 		});

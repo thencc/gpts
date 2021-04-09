@@ -65,6 +65,10 @@
 				"warn",
 				"tab"
 			],
+			"@typescript-eslint/indent": [
+				"warn",
+				"tab"
+			],
 			"semi": [
 				"warn",
 				"always"
