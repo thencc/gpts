@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GpTs = void 0;
 // in case this is not the web, import fetch for node
 const node_fetch_1 = require("node-fetch");
+const FormData = require("form-data");
 class GpTs {
     constructor(apiKey, origin = 'https://api.openai.com/') {
         this.headers = {
@@ -38,11 +39,14 @@ class GpTs {
             const url = `${this.origin}${endpoint}`; // ex: https://api.openai.com/v1/engines
             const res = yield node_fetch_1.default(url, {
                 method: method,
-                headers: method == 'GET' ? this.headers.get : this.headers.post,
-                body: method == 'GET' ? null : JSON.stringify(reqOptions || {})
+                headers: method == 'POST' ? this.headers.post : this.headers.get,
+                body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null
             });
             if (res.status == 401) {
                 throw 'invalid api key';
+            }
+            else if (res.status == 403) {
+                throw 'no access to this';
             }
             else if (res.status !== 200) {
                 throw 'request err';
@@ -53,12 +57,12 @@ class GpTs {
             }
         });
     }
-    listEngines() {
+    engineList() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.request('v1/engines');
         });
     }
-    retrieveEngine(engineId) {
+    engineRetrieve(engineId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.request(`v1/engines/${engineId}`);
         });
@@ -100,6 +104,53 @@ class GpTs {
             // openai mixes up model / engineId here?
             const opts = Object.assign({ model: engineId }, options);
             return yield this.request('v1/answers', 'POST', opts);
+        });
+    }
+    fileList() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request('v1/files');
+        });
+    }
+    // backend: file is fs.ReadStream (node.js)
+    // frontend: file is ...
+    fileUpload(file, purpose) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const formData = new FormData();
+            formData.append('purpose', purpose);
+            formData.append('file', file);
+            // console.log('formData', formData);
+            const res = yield node_fetch_1.default(`${this.origin}v1/files`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${this.apiKey}`,
+                    // removing content-type header makes file upload work... strange
+                    // 'Content-Type': 'multipart/form-data'
+                }
+            });
+            // console.log('res', res);
+            if (res.status == 401) {
+                throw 'invalid api key';
+            }
+            else if (res.status !== 200) {
+                throw 'request err';
+            }
+            else {
+                const json = yield res.json();
+                return json;
+            }
+        });
+    }
+    fileRetrieve(fileId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(`v1/files/${fileId}`);
+        });
+    }
+    // "Only owners of organizations can delete files currently." (https://beta.openai.com/docs/api-reference/files/delete)
+    // not sure about the return type here as i am not an org owner
+    fileDelete(fileId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request(`v1/files/${fileId}`, 'DELETE');
         });
     }
 }

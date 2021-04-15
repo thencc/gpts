@@ -1,11 +1,22 @@
-export declare type ResponseType = 'engine' | 'list' | 'text_completion' | 'search_result' | 'classification' | 'answer';
+export declare enum ObjectType {
+    'engine' = 0,
+    'list' = 1,
+    'text_completion' = 2,
+    'search_result' = 3,
+    'classification' = 4,
+    'answer' = 5,
+    'file' = 6
+}
 export declare type BasicResponse = {
-    object: ResponseType;
+    object: ObjectType;
+};
+export declare type BasicRequest = {
+    engineId: EngineId;
 };
 export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta' | 'content-filter-alpha-c4' | 'content-filter-dev' | 'cursing-filter-v6';
 export declare type Engine = {
     id: EngineId;
-    object: 'engine';
+    object: ObjectType.engine;
     owner: string;
     ready: boolean;
     created: null;
@@ -14,14 +25,11 @@ export declare type Engine = {
     ready_replicas: null;
     replicas: null;
 };
-export declare type ListEnginesResponse = {
+export declare type EngineListResponse = {
     data: Engine[];
-    object: 'list';
+    object: ObjectType.list;
 };
-export declare type RetrieveEngineResponse = Engine;
-export declare type BasicRequest = {
-    engineId: EngineId;
-};
+export declare type EngineRetrieveResponse = Engine;
 export declare type CompletionRequest = BasicRequest & {
     prompt?: string | string[];
     max_tokens?: number;
@@ -39,7 +47,7 @@ export declare type CompletionRequest = BasicRequest & {
 };
 export declare type CompletionResponse = {
     id: string;
-    object: 'text_completion';
+    object: ObjectType.text_completion;
     created: number;
     model: string;
     choices: {
@@ -58,12 +66,12 @@ export declare type SearchRequest = BasicRequest & {
 };
 export declare type SearchResponse = {
     data: SearchResult[];
-    object: 'list';
+    object: ObjectType.list;
     model: string;
 };
 export declare type SearchResult = {
     document: number;
-    object: 'search_result';
+    object: ObjectType.search_result;
     score: number;
 };
 export declare type ClassificationRequest = BasicRequest & {
@@ -85,7 +93,7 @@ export declare type ClassificationResponse = {
     completion: string;
     label: string;
     model: string;
-    object: 'classification';
+    object: ObjectType.classification;
     search_model: EngineId;
     selected_examples: {
         document: number;
@@ -121,10 +129,26 @@ export declare type AnswerResponse = {
     answers: string[];
     completion: string;
     model: string;
-    object: 'answer';
+    object: ObjectType.answer;
     search_model: EngineId;
     selected_documents: {
         document: number;
         text: string;
     }[];
 };
+export declare type File = {
+    id: string;
+    object: ObjectType.file;
+    bytes: number;
+    created_at: number;
+    filename: string;
+    format?: string;
+    purpose: 'answers' | 'classifications' | 'search';
+    status?: string;
+};
+export declare type FileListResponse = {
+    data: File[];
+    object: ObjectType.list;
+};
+export declare type FileUploadResponse = File;
+export declare type FileRetrieveResponse = File;

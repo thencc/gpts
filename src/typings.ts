@@ -1,13 +1,19 @@
-export type ResponseType =
-	'engine' |
-	'list' |
-	'text_completion' |
-	'search_result' |
-	'classification' |
-	'answer';
+export enum ObjectType {
+	'engine',
+	'list',
+	'text_completion',
+	'search_result',
+	'classification',
+	'answer',
+	'file'
+}
 
 export type BasicResponse = {
-	object: ResponseType;
+	object: ObjectType;
+}
+
+export type BasicRequest = {
+	engineId: EngineId;
 }
 
 export type EngineId =
@@ -17,13 +23,14 @@ export type EngineId =
 	'curie-instruct-beta' |
 	'davinci' |
 	'davinci-instruct-beta' |
+	// undocumented:
 	'content-filter-alpha-c4' |
 	'content-filter-dev' |
 	'cursing-filter-v6';
 
 export type Engine = {
 	id: EngineId;
-	object: 'engine';
+	object: ObjectType.engine;
 	owner: string; // 'openai',
 	ready: boolean;
 	// undocumented:
@@ -34,16 +41,12 @@ export type Engine = {
 	replicas: null;
 }
 
-export type ListEnginesResponse = {
+export type EngineListResponse = {
 	data: Engine[];
-	object: 'list';
+	object: ObjectType.list;
 };
 
-export type RetrieveEngineResponse = Engine;
-
-export type BasicRequest = {
-	engineId: EngineId;
-}
+export type EngineRetrieveResponse = Engine;
 
 export type CompletionRequest = BasicRequest & {
 	prompt?: string | string[];
@@ -63,7 +66,7 @@ export type CompletionRequest = BasicRequest & {
 
 export type CompletionResponse = {
 	id: string;
-	object: 'text_completion'; // string;
+	object: ObjectType.text_completion;
 	created: number; // timestamp
 	model: string; // ex: 'davinci:2020-05-03'
 	choices: {
@@ -84,14 +87,14 @@ export type SearchRequest = BasicRequest & {
 
 export type SearchResponse = {
 	data: SearchResult[];
-	object: 'list';
+	object: ObjectType.list;
 	// undocumented
 	model: string; // 'ada:2020-05-03'
 }
 
 export type SearchResult = {
 	document: number; // index
-	object: 'search_result' // unique identifier for object type
+	object: ObjectType.search_result;
 	score: number; // 215.412
 }
 
@@ -115,7 +118,7 @@ export type ClassificationResponse = {
 	completion: string; // 'cmpl-2euN7lUVZ0d4RKbQqRV79IiiE6M1f',
 	label: string; // 'Negative',
 	model: string; // 'curie:2020-05-03',
-	object: 'classification';
+	object: ObjectType.classification;
 	search_model: EngineId;
 	selected_examples:
 	{
@@ -158,7 +161,7 @@ export type AnswerResponse = {
 	answers: string[];
 	completion: string; // 'cmpl-2euVa1kmKUuLpSX600M41125Mo9NI',
 	model: string; // 'curie:2020-05-03',
-	object: 'answer';
+	object: ObjectType.answer;
 	search_model: EngineId;
 	selected_documents:
 	{
@@ -167,4 +170,22 @@ export type AnswerResponse = {
 	}[];
 }
 
-// TODO Files
+export type File = {
+	id: string; // 'file-ccdDZrC3iZVNiQVeEA6Z66wf',
+	object: ObjectType.file;
+	bytes: number; // 175,
+	created_at: number; // 1613677385,
+	filename: string; // 'train.jsonl',
+	format?: string; // 'TEXT_HASH_JSONL' // 'TEXT_JSONL'
+	purpose: 'answers' | 'classifications' | 'search'; // 'search'
+	status?: string; // 'uploaded' | 'processed' | more...? deleted
+};
+
+export type FileListResponse = {
+	data: File[];
+	object: ObjectType.list;
+}
+
+export type FileUploadResponse = File;
+
+export type FileRetrieveResponse = File;

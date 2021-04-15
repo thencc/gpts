@@ -5,6 +5,9 @@
 
 import { GpTs } from '../src';
 
+import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
+import * as path from 'path';
+
 (async () => {
 	const openai_apiKey = '';
 
@@ -12,9 +15,9 @@ import { GpTs } from '../src';
 	// console.log('c', c);
 
 	try {
-		// const s = await c.listEngines();
+		// const s = await c.engineList();
 
-		// const s = await c.retrieveEngine('ada');
+		// const s = await c.engineRetrieve('ada');
 
 		// const s = await c.completion({
 		// 	engineId: 'ada',
@@ -42,18 +45,28 @@ import { GpTs } from '../src';
 		// 	query: 'It is a raining day: (',
 		// });
 
-		const s = await c.answer({
-			engineId: 'ada',
-			examples: [
-				['A happy moment', 'Positive'],
-				['I am sad.', 'Negative'],
-				['I am feeling awesome', 'Positive']
-			],
-			question: 'What is the meaning of life?',
-			examples_context: 'In 2017, U.S. life expectancy was 78.6 years.',
-			documents: ['Puppy A is happy.', 'Puppy B is sad.'],
-			// file: 'test'
-		});
+		// const s = await c.answer({
+		// 	engineId: 'ada',
+		// 	examples: [
+		// 		['A happy moment', 'Positive'],
+		// 		['I am sad.', 'Negative'],
+		// 		['I am feeling awesome', 'Positive']
+		// 	],
+		// 	question: 'What is the meaning of life?',
+		// 	examples_context: 'In 2017, U.S. life expectancy was 78.6 years.',
+		// 	documents: ['Puppy A is happy.', 'Puppy B is sad.'],
+		// 	// file: 'test'
+		// });
+
+		// files
+		// const s = await c.fileList();
+
+		const f = fs.createReadStream(path.join(__dirname, './answers-file.jsonl'));
+		const s = await c.fileUpload(f, 'answers');
+
+		// const s = await c.fileRetrieve('file-2U2KDdN8yezg4LY18C2IZ3Gx');
+
+		// const s = await c.fileDelete('file-2U2KDdN8yezg4LY18C2IZ3Gx');
 
 		console.log('s:', s);
 	} catch (e) {

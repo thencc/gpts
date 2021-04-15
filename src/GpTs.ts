@@ -6,14 +6,21 @@ import {
 	CompletionRequest,
 	CompletionResponse,
 	EngineId,
-	ListEnginesResponse,
-	RetrieveEngineResponse,
+	FileListResponse,
+	EngineListResponse,
+	EngineRetrieveResponse,
 	SearchRequest,
-	SearchResponse
+	SearchResponse,
+	FileUploadResponse,
+	FileRetrieveResponse
 } from './typings';
 
 // in case this is not the web, import fetch for node
 import fetch from 'node-fetch';
+
+// for file uploading
+import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
+import * as FormData from 'form-data';
 
 export class GpTs {
 	// hello = 'world';
@@ -43,15 +50,17 @@ export class GpTs {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private async request(endpoint: string, method: 'GET' | 'POST' = 'GET', reqOptions?: any): Promise<any> {
+	private async request(endpoint: string, method: 'GET' | 'POST' | 'DELETE' = 'GET', reqOptions?: any): Promise<any> {
 		const url = `${this.origin}${endpoint}`; // ex: https://api.openai.com/v1/engines
 		const res = await fetch(url, {
 			method: method,
-			headers: method == 'GET' ? this.headers.get : this.headers.post,
-			body: method == 'GET' ? null : JSON.stringify(reqOptions || {})
+			headers: method == 'POST' ? this.headers.post : this.headers.get,
+			body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null
 		});
 		if (res.status == 401) {
 			throw 'invalid api key';
+		} else if (res.status == 403) {
+			throw 'no access to this';
 		} else if (res.status !== 200) {
 			throw 'request err';
 		} else {
@@ -60,12 +69,12 @@ export class GpTs {
 		}
 	}
 
-	async listEngines(): Promise<ListEnginesResponse> {
-		return await this.request('v1/engines') as ListEnginesResponse;
+	async engineList(): Promise<EngineListResponse> {
+		return await this.request('v1/engines') as EngineListResponse;
 	}
 
-	async retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse> {
-		return await this.request(`v1/engines/${engineId}`) as RetrieveEngineResponse;
+	async engineRetrieve(engineId: EngineId): Promise<EngineRetrieveResponse> {
+		return await this.request(`v1/engines/${engineId}`) as EngineRetrieveResponse;
 	}
 
 	async completion(options: CompletionRequest): Promise<CompletionResponse> {
@@ -124,7 +133,48 @@ export class GpTs {
 		) as AnswerResponse;
 	}
 
-	// TODO files
-	// https://beta.openai.com/docs/api-reference/files/list
+	async fileList(): Promise<FileListResponse> {
+		return await this.request('v1/files') as FileListResponse;
+	}
+
+	// backend: file is fs.ReadStream (node.js)
+	// frontend: file is ...
+	async fileUpload(file: fs.ReadStream, purpose: 'answers' | 'classifications' | 'search'): Promise<FileUploadResponse> {
+		const formData = new FormData();
+		formData.append('purpose', purpose);
+		formData.append('file', file);
+		// console.log('formData', formData);
+
+		const res = await fetch(`${this.origin}v1/files`, {
+			method: 'POST',
+			body: formData,
+			headers: {
+				Authorization: `Bearer ${this.apiKey}`,
+				// removing content-type header makes file upload work... strange
+				// 'Content-Type': 'multipart/form-data'
+			}
+		});
+		// console.log('res', res);
+
+		if (res.status == 401) {
+			throw 'invalid api key';
+		} else if (res.status !== 200) {
+			throw 'request err';
+		} else {
+			const json: FileUploadResponse = await res.json();
+			return json;
+		}
+	}
+
+	async fileRetrieve(fileId: string): Promise<FileRetrieveResponse> {
+		return await this.request(`v1/files/${fileId}`) as FileRetrieveResponse;
+	}
+
+	// "Only owners of organizations can delete files currently." (https://beta.openai.com/docs/api-reference/files/delete)
+	// not sure about the return type here as i am not an org owner
+	async fileDelete(fileId: string): Promise<void> {
+		return await this.request(`v1/files/${fileId}`, 'DELETE') as void;
+	}
+
 }
 export default GpTs;
