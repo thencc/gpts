@@ -14,7 +14,7 @@ exports.GpTs = void 0;
 const node_fetch_1 = require("node-fetch");
 const FormData = require("form-data");
 class GpTs {
-    constructor(apiKey, origin = 'https://api.openai.com/') {
+    constructor(apiKey, origin = 'https://api.openai.com', apiVersion = 'v1') {
         this.headers = {
             get: {
                 Authorization: 'Bearer'
@@ -26,6 +26,7 @@ class GpTs {
         };
         // console.log('GpTs constructed');
         this.origin = origin;
+        this.apiVersion = apiVersion;
         this.setApiKey(apiKey);
     }
     setApiKey(apiKey) {
@@ -36,7 +37,7 @@ class GpTs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(endpoint, method = 'GET', reqOptions) {
         return __awaiter(this, void 0, void 0, function* () {
-            const url = `${this.origin}${endpoint}`; // ex: https://api.openai.com/v1/engines
+            const url = `${this.origin}/${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
             const res = yield node_fetch_1.default(url, {
                 method: method,
                 headers: method == 'POST' ? this.headers.post : this.headers.get,
@@ -59,19 +60,19 @@ class GpTs {
     }
     engineList() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.request('v1/engines');
+            return yield this.request('engines');
         });
     }
     engineRetrieve(engineId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.request(`v1/engines/${engineId}`);
+            return yield this.request(`engines/${engineId}`);
         });
     }
     completion(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const engineId = options.engineId;
             delete options.engineId; // some endpoints err if you pass in this
-            return yield this.request(`v1/engines/${engineId}/completions`, 'POST', options);
+            return yield this.request(`engines/${engineId}/completions`, 'POST', options);
         });
     }
     // TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
@@ -85,7 +86,7 @@ class GpTs {
         return __awaiter(this, void 0, void 0, function* () {
             const engineId = options.engineId;
             delete options.engineId; // some endpoints err if you pass in this
-            return yield this.request(`v1/engines/${engineId}/search`, 'POST', options);
+            return yield this.request(`engines/${engineId}/search`, 'POST', options);
         });
     }
     classification(options) {
@@ -94,7 +95,7 @@ class GpTs {
             delete options.engineId; // some endpoints err if you pass in this
             // openai mixes up model / engineId here?
             const opts = Object.assign({ model: engineId }, options);
-            return yield this.request('v1/classifications', 'POST', opts);
+            return yield this.request('classifications', 'POST', opts);
         });
     }
     answer(options) {
@@ -103,12 +104,12 @@ class GpTs {
             delete options.engineId; // some endpoints err if you pass in this
             // openai mixes up model / engineId here?
             const opts = Object.assign({ model: engineId }, options);
-            return yield this.request('v1/answers', 'POST', opts);
+            return yield this.request('answers', 'POST', opts);
         });
     }
     fileList() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.request('v1/files');
+            return yield this.request('files');
         });
     }
     // backend: file is fs.ReadStream (node.js)
@@ -119,7 +120,7 @@ class GpTs {
             formData.append('purpose', purpose);
             formData.append('file', file);
             // console.log('formData', formData);
-            const res = yield node_fetch_1.default(`${this.origin}v1/files`, {
+            const res = yield node_fetch_1.default(`${this.origin}/${this.apiVersion}/files`, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -143,14 +144,14 @@ class GpTs {
     }
     fileRetrieve(fileId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.request(`v1/files/${fileId}`);
+            return yield this.request(`files/${fileId}`);
         });
     }
     // "Only owners of organizations can delete files currently." (https://beta.openai.com/docs/api-reference/files/delete)
     // not sure about the return type here as i am not an org owner
     fileDelete(fileId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.request(`v1/files/${fileId}`, 'DELETE');
+            return yield this.request(`files/${fileId}`, 'DELETE');
         });
     }
 }

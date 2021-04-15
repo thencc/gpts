@@ -3,9 +3,10 @@ import { AnswerRequest, AnswerResponse, ClassificationRequest, ClassificationRes
 import * as fs from 'fs';
 export declare class GpTs {
     origin: string;
+    apiVersion: string;
     apiKey: string;
     private headers;
-    constructor(apiKey: string, origin?: string);
+    constructor(apiKey: string, origin?: string, apiVersion?: string);
     private setApiKey;
     private request;
     engineList(): Promise<EngineListResponse>;
