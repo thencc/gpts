@@ -1,4 +1,4 @@
-import { CompletionRequest, CompletionResponse, EngineId, ListEnginesResponse } from './typings';
+import { AnswerRequest, AnswerResponse, ClassificationRequest, ClassificationResponse, CompletionRequest, CompletionResponse, EngineId, ListEnginesResponse, RetrieveEngineResponse, SearchRequest, SearchResponse } from './typings';
 export declare class GpTs {
     origin: string;
     apiKey: string;
@@ -7,7 +7,11 @@ export declare class GpTs {
     private setApiKey;
     private request;
     listEngines(): Promise<ListEnginesResponse>;
-    createCompletion(engineId: EngineId, options?: CompletionRequest): Promise<CompletionResponse>;
+    retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse>;
+    completion(options: CompletionRequest): Promise<CompletionResponse>;
     createCompletionStream(engineId: EngineId, options: Partial<CompletionRequest>): Promise<any>;
+    search(options: SearchRequest): Promise<SearchResponse>;
+    classification(options: ClassificationRequest): Promise<ClassificationResponse>;
+    answer(options: AnswerRequest): Promise<AnswerResponse>;
 }
 export default GpTs;

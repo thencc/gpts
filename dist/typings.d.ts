@@ -19,7 +19,10 @@ export declare type ListEnginesResponse = {
     object: 'list';
 };
 export declare type RetrieveEngineResponse = Engine;
-export declare type CompletionRequest = {
+export declare type BasicRequest = {
+    engineId: EngineId;
+};
+export declare type CompletionRequest = BasicRequest & {
     prompt?: string | string[];
     max_tokens?: number;
     temperature?: number;
@@ -46,7 +49,7 @@ export declare type CompletionResponse = {
         finish_reason: string;
     }[];
 };
-export declare type SearchRequest = {
+export declare type SearchRequest = BasicRequest & {
     documents?: string[];
     file?: string;
     query: string;
@@ -63,7 +66,7 @@ export declare type SearchResult = {
     object: 'search_result';
     score: number;
 };
-export declare type ClassificationRequest = {
+export declare type ClassificationRequest = BasicRequest & {
     model?: EngineId;
     query: string;
     examples?: string[][];
@@ -90,13 +93,11 @@ export declare type ClassificationResponse = {
         text: string;
     }[];
 };
-export declare type AnswerRequest = {
+export declare type AnswerRequestBase = BasicRequest & {
     model?: EngineId;
     question: string;
     examples: string[][];
     examples_context: string;
-    documents?: string[];
-    file?: string;
     search_model?: EngineId;
     max_rerank?: number;
     temperature?: number;
@@ -109,6 +110,13 @@ export declare type AnswerRequest = {
     return_prompt?: boolean;
     expand?: string[];
 };
+export declare type AnswerRequestDocuments = AnswerRequestBase & {
+    documents: string[];
+};
+export declare type AnswerRequestFile = AnswerRequestBase & {
+    file: string;
+};
+export declare type AnswerRequest = AnswerRequestDocuments | AnswerRequestFile;
 export declare type AnswerResponse = {
     answers: string[];
     completion: string;

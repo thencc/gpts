@@ -61,59 +61,16 @@ export class GpTs {
 	}
 
 	async listEngines(): Promise<ListEnginesResponse> {
-		// const res = await fetch('https://api.openai.com/v1/engines', {
-		// 	headers: this.getHeaders
-		// });
-		// if (res.status == 401) {
-		// 	throw 'no api auth';
-		// } else if (res.status !== 200) {
-		// 	throw 'request err';
-		// } else {
-		// 	const json: ListEnginesResponse = await res.json();
-		// 	return json;
-		// }
-		//
-		// const res: ListEnginesResponse = await this.request('v1/engines');
-		// const res = <ListEnginesResponse>await this.request('v1/engines');
-		// return res;
-		//
 		return await this.request('v1/engines') as ListEnginesResponse;
-		// return <ListEnginesResponse>await this.request('v1/engines');
 	}
 
-	// async retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse> {
-	// 	const res = await fetch(`https://api.openai.com/v1/engines/${engineId}`, {
-	// 		headers: this.getHeaders
-	// 	});
-	// 	if (res.status == 401) {
-	// 		throw 'no api auth';
-	// 	} else if (res.status !== 200) {
-	// 		throw 'request err';
-	// 	} else {
-	// 		const json: RetrieveEngineResponse = await res.json();
-	// 		return json;
-	// 	}
-	// }
+	async retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse> {
+		return await this.request(`v1/engines/${engineId}`) as RetrieveEngineResponse;
+	}
 
-	// the completion endpoint is unique in that the options arg is optional
-	async createCompletion(
-		engineId: EngineId,
-		options?: CompletionRequest
-	): Promise<CompletionResponse> {
-		// const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/completions`, {
-		// 	body: JSON.stringify(options || {}),
-		// 	headers: this.postHeaders,
-		// 	method: 'POST'
-		// });
-		// if (res.status == 401) {
-		// 	throw 'no api auth';
-		// } else if (res.status !== 200) {
-		// 	throw 'request err';
-		// } else {
-		// 	const json: CompletionResponse = await res.json();
-		// 	return json;
-		// }
-
+	async completion(options: CompletionRequest): Promise<CompletionResponse> {
+		const engineId = options.engineId;
+		delete options.engineId; // some endpoints err if you pass in this
 		return await this.request(
 			`v1/engines/${engineId}/completions`,
 			'POST',
@@ -127,66 +84,45 @@ export class GpTs {
 		return;
 	}
 
-	// async createSearch(engineId: EngineId, options: SearchRequest): Promise<SearchResponse> {
-	// 	const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/search`, {
-	// 		body: JSON.stringify(options),
-	// 		headers: this.postHeaders,
-	// 		method: 'POST'
-	// 	});
-	// 	if (res.status == 401) {
-	// 		throw 'no api auth';
-	// 	} else if (res.status !== 200) {
-	// 		throw 'request err';
-	// 	} else {
-	// 		const json: SearchResponse = await res.json();
-	// 		return json;
-	// 	}
-	// }
+	async search(options: SearchRequest): Promise<SearchResponse> {
+		const engineId = options.engineId;
+		delete options.engineId; // some endpoints err if you pass in this
+		return await this.request(
+			`v1/engines/${engineId}/search`,
+			'POST',
+			options
+		) as SearchResponse;
+	}
 
-	// async createClassification(engineId: EngineId, options: ClassificationRequest): Promise<ClassificationResponse> {
-	// 	const bod = {
-	// 		model: engineId,
-	// 		...options
-	// 	};
-	// 	const res = await fetch('https://api.openai.com/v1/classifications', {
-	// 		body: JSON.stringify(bod),
-	// 		headers: this.postHeaders,
-	// 		method: 'POST'
-	// 	});
-	// 	if (res.status == 401) {
-	// 		throw 'no api auth';
-	// 	} else if (res.status !== 200) {
-	// 		throw 'request err';
-	// 	} else {
-	// 		const json: ClassificationResponse = await res.json();
-	// 		return json;
-	// 	}
-	// }
+	async classification(options: ClassificationRequest): Promise<ClassificationResponse> {
+		const engineId = options.engineId;
+		delete options.engineId; // some endpoints err if you pass in this
+		// openai mixes up model / engineId here?
+		const opts = {
+			model: engineId,
+			...options
+		};
+		return await this.request(
+			'v1/classifications',
+			'POST',
+			opts
+		) as ClassificationResponse;
+	}
 
-	// // async createAnswer(engineId: EngineId, options: Partial<AnswerRequest>): Promise<any> {
-	// // 	const bod = {
-	// // 		model: engineId,
-	// // 		...options
-	// // 	} as AnswerRequest;
-	// async createAnswer(engineId: EngineId, options: AnswerRequest): Promise<AnswerResponse> {
-	// 	const bod = {
-	// 		model: engineId,
-	// 		...options
-	// 	};
-	// 	const res = await fetch('https://api.openai.com/v1/answers', {
-	// 		body: JSON.stringify(bod),
-	// 		headers: this.postHeaders,
-	// 		method: 'POST'
-	// 	});
-	// 	if (res.status == 401) {
-	// 		throw 'no api auth';
-	// 	} else if (res.status !== 200) {
-	// 		throw 'request err';
-	// 	} else {
-	// 		const json: AnswerResponse = await res.json();
-	// 		return json;
-	// 	}
-	// }
+	async answer(options: AnswerRequest): Promise<AnswerResponse> {
+		const engineId = options.engineId;
+		delete options.engineId; // some endpoints err if you pass in this
+		// openai mixes up model / engineId here?
+		const opts = {
+			model: engineId,
+			...options
+		};
+		return await this.request(
+			'v1/answers',
+			'POST',
+			opts
+		) as AnswerResponse;
+	}
 
 	// TODO files
 	// https://beta.openai.com/docs/api-reference/files/list

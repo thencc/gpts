@@ -41,7 +41,11 @@ export type ListEnginesResponse = {
 
 export type RetrieveEngineResponse = Engine;
 
-export type CompletionRequest = {
+export type BasicRequest = {
+	engineId: EngineId;
+}
+
+export type CompletionRequest = BasicRequest & {
 	prompt?: string | string[];
 	max_tokens?: number; // 16
 	temperature?: number;
@@ -55,7 +59,7 @@ export type CompletionRequest = {
 	frequency_penalty?: number;
 	best_of?: number;
 	logit_bias?: any; // Record<string, number> // to tinker with
-};
+}
 
 export type CompletionResponse = {
 	id: string;
@@ -70,7 +74,7 @@ export type CompletionResponse = {
 	}[];
 }
 
-export type SearchRequest = {
+export type SearchRequest = BasicRequest & {
 	documents?: string[];
 	file?: string;
 	query: string;
@@ -91,7 +95,7 @@ export type SearchResult = {
 	score: number; // 215.412
 }
 
-export type ClassificationRequest = {
+export type ClassificationRequest = BasicRequest & {
 	model?: EngineId; // ID of the engine to use for completion
 	query: string;
 	examples?: string[][];
@@ -121,13 +125,11 @@ export type ClassificationResponse = {
 	}[];
 }
 
-export type AnswerRequest = {
-	model?: EngineId;
+export type AnswerRequestBase = BasicRequest & {
+	model?: EngineId; // engineId == model?
 	question: string;
 	examples: string[][];
 	examples_context: string;
-	documents?: string[];
-	file?: string;
 	search_model?: EngineId;
 	max_rerank?: number;
 	temperature?: number;
@@ -140,6 +142,17 @@ export type AnswerRequest = {
 	return_prompt?: boolean;
 	expand?: string[];
 };
+
+export type AnswerRequestDocuments = AnswerRequestBase & {
+	documents: string[];
+}
+
+export type AnswerRequestFile = AnswerRequestBase & {
+	file: string;
+}
+
+// "You should specify either documents or a file, but not both." (https://beta.openai.com/docs/api-reference/answers/create)
+export type AnswerRequest = AnswerRequestDocuments | AnswerRequestFile;
 
 export type AnswerResponse = {
 	answers: string[];

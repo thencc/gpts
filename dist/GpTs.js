@@ -55,55 +55,18 @@ class GpTs {
     }
     listEngines() {
         return __awaiter(this, void 0, void 0, function* () {
-            // const res = await fetch('https://api.openai.com/v1/engines', {
-            // 	headers: this.getHeaders
-            // });
-            // if (res.status == 401) {
-            // 	throw 'no api auth';
-            // } else if (res.status !== 200) {
-            // 	throw 'request err';
-            // } else {
-            // 	const json: ListEnginesResponse = await res.json();
-            // 	return json;
-            // }
-            //
-            // const res: ListEnginesResponse = await this.request('v1/engines');
-            // const res = <ListEnginesResponse>await this.request('v1/engines');
-            // return res;
-            //
             return yield this.request('v1/engines');
-            // return <ListEnginesResponse>await this.request('v1/engines');
         });
     }
-    // async retrieveEngine(engineId: EngineId): Promise<RetrieveEngineResponse> {
-    // 	const res = await fetch(`https://api.openai.com/v1/engines/${engineId}`, {
-    // 		headers: this.getHeaders
-    // 	});
-    // 	if (res.status == 401) {
-    // 		throw 'no api auth';
-    // 	} else if (res.status !== 200) {
-    // 		throw 'request err';
-    // 	} else {
-    // 		const json: RetrieveEngineResponse = await res.json();
-    // 		return json;
-    // 	}
-    // }
-    // the completion endpoint is unique in that the options arg is optional
-    createCompletion(engineId, options) {
+    retrieveEngine(engineId) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const res = await fetch(`https://api.openai.com/v1/engines/${engineId}/completions`, {
-            // 	body: JSON.stringify(options || {}),
-            // 	headers: this.postHeaders,
-            // 	method: 'POST'
-            // });
-            // if (res.status == 401) {
-            // 	throw 'no api auth';
-            // } else if (res.status !== 200) {
-            // 	throw 'request err';
-            // } else {
-            // 	const json: CompletionResponse = await res.json();
-            // 	return json;
-            // }
+            return yield this.request(`v1/engines/${engineId}`);
+        });
+    }
+    completion(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const engineId = options.engineId;
+            delete options.engineId; // some endpoints err if you pass in this
             return yield this.request(`v1/engines/${engineId}/completions`, 'POST', options);
         });
     }
@@ -112,6 +75,31 @@ class GpTs {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('TODO');
             return;
+        });
+    }
+    search(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const engineId = options.engineId;
+            delete options.engineId; // some endpoints err if you pass in this
+            return yield this.request(`v1/engines/${engineId}/search`, 'POST', options);
+        });
+    }
+    classification(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const engineId = options.engineId;
+            delete options.engineId; // some endpoints err if you pass in this
+            // openai mixes up model / engineId here?
+            const opts = Object.assign({ model: engineId }, options);
+            return yield this.request('v1/classifications', 'POST', opts);
+        });
+    }
+    answer(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const engineId = options.engineId;
+            delete options.engineId; // some endpoints err if you pass in this
+            // openai mixes up model / engineId here?
+            const opts = Object.assign({ model: engineId }, options);
+            return yield this.request('v1/answers', 'POST', opts);
         });
     }
 }
