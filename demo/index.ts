@@ -59,10 +59,10 @@ import * as path from 'path';
 		// });
 
 		// files
-		// const s = await c.fileList();
+		const s = await c.fileList();
 
-		const f = fs.createReadStream(path.join(__dirname, './answers-file.jsonl'));
-		const s = await c.fileUpload(f, 'answers');
+		// const f = fs.createReadStream(path.join(__dirname, './answers-file.jsonl'));
+		// const s = await c.fileUpload(f, 'answers');
 
 		// const s = await c.fileRetrieve('file-2U2KDdN8yezg4LY18C2IZ3Gx');
 

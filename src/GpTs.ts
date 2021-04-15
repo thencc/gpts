@@ -25,6 +25,7 @@ import * as FormData from 'form-data';
 export class GpTs {
 	// hello = 'world';
 	origin: string; // origin as var for if/when api changes
+	apiVersion: string; // v1
 	apiKey: string;
 
 	private headers = {
@@ -37,9 +38,10 @@ export class GpTs {
 		}
 	}
 
-	constructor(apiKey: string, origin = 'https://api.openai.com/') {
+	constructor(apiKey: string, origin = 'https://api.openai.com', apiVersion = 'v1') {
 		// console.log('GpTs constructed');
 		this.origin = origin;
+		this.apiVersion = apiVersion;
 		this.setApiKey(apiKey);
 	}
 
@@ -51,7 +53,7 @@ export class GpTs {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private async request(endpoint: string, method: 'GET' | 'POST' | 'DELETE' = 'GET', reqOptions?: any): Promise<any> {
-		const url = `${this.origin}${endpoint}`; // ex: https://api.openai.com/v1/engines
+		const url = `${this.origin}/${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
 		const res = await fetch(url, {
 			method: method,
 			headers: method == 'POST' ? this.headers.post : this.headers.get,
@@ -70,18 +72,18 @@ export class GpTs {
 	}
 
 	async engineList(): Promise<EngineListResponse> {
-		return await this.request('v1/engines') as EngineListResponse;
+		return await this.request('engines') as EngineListResponse;
 	}
 
 	async engineRetrieve(engineId: EngineId): Promise<EngineRetrieveResponse> {
-		return await this.request(`v1/engines/${engineId}`) as EngineRetrieveResponse;
+		return await this.request(`engines/${engineId}`) as EngineRetrieveResponse;
 	}
 
 	async completion(options: CompletionRequest): Promise<CompletionResponse> {
 		const engineId = options.engineId;
 		delete options.engineId; // some endpoints err if you pass in this
 		return await this.request(
-			`v1/engines/${engineId}/completions`,
+			`engines/${engineId}/completions`,
 			'POST',
 			options
 		) as CompletionResponse;
@@ -97,7 +99,7 @@ export class GpTs {
 		const engineId = options.engineId;
 		delete options.engineId; // some endpoints err if you pass in this
 		return await this.request(
-			`v1/engines/${engineId}/search`,
+			`engines/${engineId}/search`,
 			'POST',
 			options
 		) as SearchResponse;
@@ -112,7 +114,7 @@ export class GpTs {
 			...options
 		};
 		return await this.request(
-			'v1/classifications',
+			'classifications',
 			'POST',
 			opts
 		) as ClassificationResponse;
@@ -127,14 +129,14 @@ export class GpTs {
 			...options
 		};
 		return await this.request(
-			'v1/answers',
+			'answers',
 			'POST',
 			opts
 		) as AnswerResponse;
 	}
 
 	async fileList(): Promise<FileListResponse> {
-		return await this.request('v1/files') as FileListResponse;
+		return await this.request('files') as FileListResponse;
 	}
 
 	// backend: file is fs.ReadStream (node.js)
@@ -145,7 +147,7 @@ export class GpTs {
 		formData.append('file', file);
 		// console.log('formData', formData);
 
-		const res = await fetch(`${this.origin}v1/files`, {
+		const res = await fetch(`${this.origin}/${this.apiVersion}/files`, {
 			method: 'POST',
 			body: formData,
 			headers: {
@@ -167,13 +169,13 @@ export class GpTs {
 	}
 
 	async fileRetrieve(fileId: string): Promise<FileRetrieveResponse> {
-		return await this.request(`v1/files/${fileId}`) as FileRetrieveResponse;
+		return await this.request(`files/${fileId}`) as FileRetrieveResponse;
 	}
 
 	// "Only owners of organizations can delete files currently." (https://beta.openai.com/docs/api-reference/files/delete)
 	// not sure about the return type here as i am not an org owner
 	async fileDelete(fileId: string): Promise<void> {
-		return await this.request(`v1/files/${fileId}`, 'DELETE') as void;
+		return await this.request(`files/${fileId}`, 'DELETE') as void;
 	}
 
 }
