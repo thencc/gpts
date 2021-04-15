@@ -1,4 +1,25 @@
-export type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta';
+export type ResponseType =
+	'engine' |
+	'list' |
+	'text_completion' |
+	'search_result' |
+	'classification' |
+	'answer';
+
+export type BasicResponse = {
+	object: ResponseType;
+}
+
+export type EngineId =
+	'ada' |
+	'babbage' |
+	'curie' |
+	'curie-instruct-beta' |
+	'davinci' |
+	'davinci-instruct-beta' |
+	'content-filter-alpha-c4' |
+	'content-filter-dev' |
+	'cursing-filter-v6';
 
 export type Engine = {
 	id: EngineId;
@@ -6,19 +27,19 @@ export type Engine = {
 	owner: string; // 'openai',
 	ready: boolean;
 	// undocumented:
-	created: null,
-	max_replicas: null,
-	permissions: null,
-	ready_replicas: null,
-	replicas: null
+	created: null;
+	max_replicas: null;
+	permissions: null;
+	ready_replicas: null;
+	replicas: null;
 }
 
 export type ListEnginesResponse = {
-	data: Engine[],
-	object: 'list' // string;
+	data: Engine[];
+	object: 'list';
 };
 
-export type RetrieveEngineResponse = Engine
+export type RetrieveEngineResponse = Engine;
 
 export type CompletionRequest = {
 	prompt?: string | string[];
@@ -49,7 +70,6 @@ export type CompletionResponse = {
 	}[];
 }
 
-// https://beta.openai.com/docs/api-reference/searches/create
 export type SearchRequest = {
 	documents?: string[];
 	file?: string;

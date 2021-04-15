@@ -1,4 +1,8 @@
-export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta';
+export declare type ResponseType = 'engine' | 'list' | 'text_completion' | 'search_result' | 'classification' | 'answer';
+export declare type BasicResponse = {
+    object: ResponseType;
+};
+export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta' | 'content-filter-alpha-c4' | 'content-filter-dev' | 'cursing-filter-v6';
 export declare type Engine = {
     id: EngineId;
     object: 'engine';
