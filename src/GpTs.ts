@@ -25,7 +25,7 @@ import * as FormData from 'form-data';
 export class GpTs {
 	// hello = 'world';
 	origin: string; // origin as var for if/when api changes
-	apiVersion: string; // v1
+	// apiVersion: string; // v1
 	apiKey: string;
 
 	private headers = {
@@ -38,10 +38,10 @@ export class GpTs {
 		}
 	}
 
-	constructor(apiKey: string, origin = 'https://api.openai.com', apiVersion = 'v1') {
+	constructor(apiKey: string, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {
 		// console.log('GpTs constructed');
 		this.origin = origin;
-		this.apiVersion = apiVersion;
+		// this.apiVersion = apiVersion;
 		this.setApiKey(apiKey);
 	}
 
@@ -53,10 +53,12 @@ export class GpTs {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private async request(endpoint: string, method: 'GET' | 'POST' | 'DELETE' = 'GET', reqOptions?: any): Promise<any> {
-		const url = `${this.origin}/${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
+		// const url = `${this.origin}${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
+		const url = `${this.origin}/${endpoint}`; // ex: https://api.openai.com/v1/engines
 		const res = await fetch(url, {
 			method: method,
-			headers: method == 'POST' ? this.headers.post : this.headers.get,
+			// headers: method == 'POST' ? this.headers.post : this.headers.get,
+			headers: this.headers.post,
 			body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null
 		});
 		if (res.status == 401) {
@@ -90,7 +92,7 @@ export class GpTs {
 	}
 
 	// TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
-	async createCompletionStream(engineId: EngineId, options: Partial<CompletionRequest>): Promise<any> {
+	async completionStream(engineId: EngineId, options: Partial<CompletionRequest>): Promise<any> {
 		console.log('TODO');
 		return;
 	}
@@ -147,7 +149,8 @@ export class GpTs {
 		formData.append('file', file);
 		// console.log('formData', formData);
 
-		const res = await fetch(`${this.origin}/${this.apiVersion}/files`, {
+		// const res = await fetch(`${this.origin}${this.apiVersion}/files`, {
+		const res = await fetch(`${this.origin}/files`, {
 			method: 'POST',
 			body: formData,
 			headers: {
