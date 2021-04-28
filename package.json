@@ -1,12 +1,12 @@
 {
-	"name": "gpt-ts",
+	"name": "gpts",
 	"version": "1.0.1",
 	"description": "typescript wrapper for gpt-3 api",
 	"keywords": [
 		"gpt",
 		"gpt-3",
 		"ts",
-		"gpt-ts",
+		"gpts",
 		"typescript",
 		"gpts"
 	],
@@ -14,12 +14,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/thencc/gpt-ts.git"
+		"url": "git+https://github.com/thencc/gpts.git"
 	},
 	"bugs": {
-		"url": "https://github.com/thencc/gpt-ts/issues"
+		"url": "https://github.com/thencc/gpts/issues"
 	},
-	"homepage": "https://github.com/thencc/gpt-ts#readme",
+	"homepage": "https://github.com/thencc/gpts#readme",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
