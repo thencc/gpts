@@ -7,7 +7,8 @@
 		"gpt-3",
 		"ts",
 		"gpt-ts",
-		"typescript"
+		"typescript",
+		"gpts"
 	],
 	"author": "@spencercap (@thencc)",
 	"license": "MIT",
