@@ -14,7 +14,7 @@ exports.GpTs = void 0;
 const node_fetch_1 = require("node-fetch");
 const FormData = require("form-data");
 class GpTs {
-    constructor(apiKey, origin = 'https://api.openai.com', apiVersion = 'v1') {
+    constructor(apiKey, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {
         this.headers = {
             get: {
                 Authorization: 'Bearer'
@@ -26,7 +26,7 @@ class GpTs {
         };
         // console.log('GpTs constructed');
         this.origin = origin;
-        this.apiVersion = apiVersion;
+        // this.apiVersion = apiVersion;
         this.setApiKey(apiKey);
     }
     setApiKey(apiKey) {
@@ -37,10 +37,12 @@ class GpTs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(endpoint, method = 'GET', reqOptions) {
         return __awaiter(this, void 0, void 0, function* () {
-            const url = `${this.origin}/${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
+            // const url = `${this.origin}${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
+            const url = `${this.origin}/${endpoint}`; // ex: https://api.openai.com/v1/engines
             const res = yield node_fetch_1.default(url, {
                 method: method,
-                headers: method == 'POST' ? this.headers.post : this.headers.get,
+                // headers: method == 'POST' ? this.headers.post : this.headers.get,
+                headers: this.headers.post,
                 body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null
             });
             if (res.status == 401) {
@@ -76,7 +78,7 @@ class GpTs {
         });
     }
     // TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
-    createCompletionStream(engineId, options) {
+    completionStream(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('TODO');
             return;
@@ -120,7 +122,8 @@ class GpTs {
             formData.append('purpose', purpose);
             formData.append('file', file);
             // console.log('formData', formData);
-            const res = yield node_fetch_1.default(`${this.origin}/${this.apiVersion}/files`, {
+            // const res = await fetch(`${this.origin}${this.apiVersion}/files`, {
+            const res = yield node_fetch_1.default(`${this.origin}/files`, {
                 method: 'POST',
                 body: formData,
                 headers: {

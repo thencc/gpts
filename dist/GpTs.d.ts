@@ -3,7 +3,6 @@ import { AnswerRequest, AnswerResponse, ClassificationRequest, ClassificationRes
 import * as fs from 'fs';
 export declare class GpTs {
     origin: string;
-    apiVersion: string;
     apiKey: string;
     private headers;
     constructor(apiKey: string, origin?: string, apiVersion?: string);
@@ -12,7 +11,7 @@ export declare class GpTs {
     engineList(): Promise<EngineListResponse>;
     engineRetrieve(engineId: EngineId): Promise<EngineRetrieveResponse>;
     completion(options: CompletionRequest): Promise<CompletionResponse>;
-    createCompletionStream(engineId: EngineId, options: Partial<CompletionRequest>): Promise<any>;
+    completionStream(engineId: EngineId, options: Partial<CompletionRequest>): Promise<any>;
     search(options: SearchRequest): Promise<SearchResponse>;
     classification(options: ClassificationRequest): Promise<ClassificationResponse>;
     answer(options: AnswerRequest): Promise<AnswerResponse>;
