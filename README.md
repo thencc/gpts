@@ -41,6 +41,28 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
 
 ---
 
+## features
+
+-   engines
+    -   list ✅
+    -   retreive ✅
+-   completions
+    -   create ✅
+    -   stream ⚠️ (TODO)
+-   searches
+    -   create ✅
+-   classifications
+    -   create ✅
+-   answers
+    -   create ✅
+-   files
+    -   list ✅
+    -   upload ✅
+    -   retrieve ✅
+    -   delete ✅
+
+---
+
 ## notes
 
 -   uses OpenAI's REST api
