@@ -9,7 +9,7 @@ import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
 import * as path from 'path';
 
 (async () => {
-	const openai_apiKey = '';
+	const openai_apiKey = ''; // "sk-123..."
 
 	const c = new GpTs(openai_apiKey);
 	// console.log('c', c);
