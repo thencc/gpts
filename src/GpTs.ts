@@ -22,12 +22,20 @@ import {
 import * as NodeFetch from 'node-fetch';
 // let fetch: typeof NodeFetch | typeof window.fetch;
 let fetch: any;
-console.log('client-side?', Boolean(window));
-if (window) {
+if (typeof window !== 'undefined') {
+	console.log('is browser');
 	fetch = window.fetch;
 } else {
+	console.log('is node.js');
 	fetch = NodeFetch;
 }
+
+// console.log('client-side?', !!(window));
+// if (window) {
+// 	fetch = window.fetch;
+// } else {
+// 	fetch = NodeFetch;
+// }
 
 // for file uploading
 import * as fs from 'fs'; // needs "@types/node": "^14.14.37",

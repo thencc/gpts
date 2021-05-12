@@ -17,11 +17,12 @@ exports.GpTs = void 0;
 const NodeFetch = require("node-fetch");
 // let fetch: typeof NodeFetch | typeof window.fetch;
 let fetch;
-console.log('client-side?', Boolean(window));
-if (window) {
+if (typeof window !== 'undefined') {
+    console.log('is browser');
     fetch = window.fetch;
 }
 else {
+    console.log('is node.js');
     fetch = NodeFetch;
 }
 const FormData = require("form-data");
