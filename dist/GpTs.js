@@ -14,17 +14,21 @@ exports.GpTs = void 0;
 // if (!window) {
 // 	import fetch from 'node-fetch';
 // }
-const NodeFetch = require("node-fetch");
+// import * as NodeFetch from 'node-fetch';
 // let fetch: typeof NodeFetch | typeof window.fetch;
 let fetch;
-if (typeof window !== 'undefined') {
-    console.log('is browser');
-    fetch = window.fetch;
-}
-else {
-    console.log('is node.js');
-    fetch = NodeFetch;
-}
+const go = () => __awaiter(void 0, void 0, void 0, function* () {
+    if (typeof window !== 'undefined') {
+        console.log('is browser');
+        fetch = window.fetch;
+    }
+    else {
+        console.log('is node.js');
+        // fetch = NodeFetch;
+        fetch = yield Promise.resolve().then(() => require('node-fetch'));
+    }
+});
+go();
 const FormData = require("form-data");
 class GpTs {
     constructor(apiKey, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {

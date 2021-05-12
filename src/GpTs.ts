@@ -19,16 +19,20 @@ import {
 // if (!window) {
 // 	import fetch from 'node-fetch';
 // }
-import * as NodeFetch from 'node-fetch';
+// import * as NodeFetch from 'node-fetch';
 // let fetch: typeof NodeFetch | typeof window.fetch;
 let fetch: any;
-if (typeof window !== 'undefined') {
-	console.log('is browser');
-	fetch = window.fetch;
-} else {
-	console.log('is node.js');
-	fetch = NodeFetch;
-}
+const go = async () => {
+	if (typeof window !== 'undefined') {
+		console.log('is browser');
+		fetch = window.fetch;
+	} else {
+		console.log('is node.js');
+		// fetch = NodeFetch;
+		fetch = await import('node-fetch');
+	}
+};
+go();
 
 // console.log('client-side?', !!(window));
 // if (window) {
