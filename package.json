@@ -25,7 +25,8 @@
 		"/dist"
 	],
 	"scripts": {
-		"build": "tsc"
+		"build": "tsc",
+		"test": "ts-node demo/index.ts"
 	},
 	"dependencies": {
 		"axios": "^0.21.1",

@@ -65,10 +65,33 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
 
 ## notes
 
+### general
+
 -   uses openai's REST api
--   works client + server side using axios for http requests
--   DO NOT share your api key in public client-side frontend code
 -   for the [/classifications](https://beta.openai.com/docs/api-reference/classifications/create) and [/answers](https://beta.openai.com/docs/api-reference/answers/create) endpoints, openai seems to switch the syntax from `engineId` -> `model` so if you specify both in the `options` argument, `options.model` takes precedence
+
+### client-side use
+
+-   this library works client + server side using [axios](https://github.com/axios/axios) for http requests
+-   DO NOT share your api key in public client-side frontend code
+-   one way to hide your openai api key for client-side use is by hosting an api wrapper endpoint that enforces your own authentication, then updating the origin this library looks to use like the below.
+
+api wrapper example:
+
+```ts
+import { GpTs } from 'gpts';
+/*
+    gives your api wrapper authorization like this:
+        headers: {
+            'Authorization': 'Bearer ASuperSecretPassword'
+        }
+
+    the constructor takes 2 arguments
+        1. the authorization bearer value
+        2. the api origin
+*/
+const brain = new GpTs('ASuperSecretPassword', 'https://company.api-wrappers.io/gpt3');
+```
 
 ---
 
