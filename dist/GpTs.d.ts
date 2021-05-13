@@ -5,7 +5,7 @@ export declare class GpTs {
     origin: string;
     apiKey: string;
     private headers;
-    constructor(apiKey: string, origin?: string, apiVersion?: string);
+    constructor(apiKey: string, origin?: string);
     private setApiKey;
     private request;
     engineList(): Promise<EngineListResponse>;

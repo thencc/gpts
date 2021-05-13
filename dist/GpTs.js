@@ -10,11 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GpTs = void 0;
-// in case this is not the web, import fetch for node
 const axios_1 = require("axios");
 const FormData = require("form-data");
 class GpTs {
-    constructor(apiKey, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {
+    constructor(apiKey, origin = 'https://api.openai.com/v1') {
         this.headers = {
             get: {
                 Authorization: 'Bearer',
@@ -26,14 +25,13 @@ class GpTs {
         };
         // console.log('GpTs constructed');
         this.origin = origin;
-        // this.apiVersion = apiVersion;
         this.setApiKey(apiKey);
     }
     setApiKey(apiKey) {
         this.apiKey = apiKey;
-        // TODO update to work for custom endpoint WITHOUT bearer prefixed
         this.headers.get.Authorization = `Bearer ${this.apiKey}`;
         this.headers.post.Authorization = `Bearer ${this.apiKey}`;
+        // TODO use axios instance for ease
         // const instance = axios.create({
         // 	baseURL: 'https://some-domain.com/api/',
         // 	timeout: 1000,
@@ -43,14 +41,7 @@ class GpTs {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(endpoint, method = 'GET', reqOptions) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const url = `${this.origin}${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
             const url = `${this.origin}/${endpoint}`; // ex: https://api.openai.com/v1/engines
-            // const res = await fetch(url, {
-            // 	method: method,
-            // 	// headers: method == 'POST' ? this.headers.post : this.headers.get,
-            // 	headers: this.headers.post,
-            // 	body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null,
-            // });
             const res = yield axios_1.default.request({
                 url,
                 method,
@@ -134,49 +125,17 @@ class GpTs {
             const formData = new FormData();
             formData.append('purpose', purpose);
             formData.append('file', file);
-            // console.log('formData', formData);
-            // const res = await fetch(`${this.origin}${this.apiVersion}/files`, {
-            // const res = await fetch(`${this.origin}/files`, {
-            // 	method: 'POST',
-            // 	body: formData,
-            // 	headers: {
-            // 		Authorization: `Bearer ${this.apiKey}`,
-            // 		// removing content-type header makes file upload work... strange
-            // 		// 'Content-Type': 'multipart/form-data'
-            // 	},
-            // });
-            // const res = await axios.post(`${this.origin}/files`, formData, {
-            // 	// method: 'POST',
-            // 	// data: formData,
-            // 	headers: {
-            // 		Authorization: `Bearer ${this.apiKey}`,
-            // 		// removing content-type header makes file upload work... strange
-            // 		'Content-Type': 'multipart/form-data',
-            // 	},
-            // });
-            // console.log('boundary', (formData as any)._boundary);
-            // console.log('boundary', formData.getBoundary());
             const boundary = formData.getBoundary();
             const res = yield axios_1.default({
                 url: `${this.origin}/files`,
                 method: 'POST',
                 data: formData,
-                // form: formData,
-                // responseType: 'document',
                 headers: {
                     Authorization: `Bearer ${this.apiKey}`,
                     // form-data POST doesnt work without BOUNDARY !
                     'Content-Type': `multipart/form-data; boundary=${boundary}`,
-                    // no
-                    // 'Content-Type': `multipart/form-data; boundary=${formData.getBoundary}`,
                 },
             });
-            // console.log('rrrr', res.request.data.error);
-            // console.log('res:', res);
-            // console.log('heads:', res.headers);
-            // for (const h in res.headers) {
-            // 	console.log('h', h, res.headers.get(h));
-            // }
             if (res.status == 401) {
                 throw 'invalid api key';
             }
@@ -184,7 +143,6 @@ class GpTs {
                 throw 'request err';
             }
             else {
-                // const json: FileUploadResponse = await res.json();
                 const json = res.data;
                 return json;
             }
