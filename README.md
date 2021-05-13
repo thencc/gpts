@@ -57,7 +57,7 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
     -   create ✅
 -   files
     -   list ✅
-    -   upload ✅
+    -   upload ✅ (server-side only)
     -   retrieve ✅
     -   delete ✅
 
@@ -65,10 +65,10 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
 
 ## notes
 
--   uses OpenAI's REST api
--   backend: depends on `node-fetch`
--   frontend: works client-side too (but DO NOT share your api key in public client-side code)
--   for the [/classifications](https://beta.openai.com/docs/api-reference/classifications/create) and [/answers](https://beta.openai.com/docs/api-reference/answers/create) endpoints openai seems to switch the syntax from engineId -> model so if you specify both in the options argument, options.model takes precedence
+-   uses openai's REST api
+-   works client + server side using axios for http requests
+-   DO NOT share your api key in public client-side frontend code
+-   for the [/classifications](https://beta.openai.com/docs/api-reference/classifications/create) and [/answers](https://beta.openai.com/docs/api-reference/answers/create) endpoints, openai seems to switch the syntax from `engineId` -> `model` so if you specify both in the `options` argument, `options.model` takes precedence
 
 ---
 
