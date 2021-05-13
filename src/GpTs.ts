@@ -15,42 +15,14 @@ import {
 	FileRetrieveResponse,
 } from './typings';
 
-// in case this is not the web, import fetch for node
 import axios from 'axios';
-
-// if (!window) {
-// 	import fetch from 'node-fetch';
-// }
-// import * as NodeFetch from 'node-fetch';
-// let fetch: typeof NodeFetch | typeof window.fetch;
-// let fetch: any;
-// const go = async () => {
-// 	if (typeof window !== 'undefined') {
-// 		console.log('is browser');
-// 		fetch = window.fetch;
-// 	} else {
-// 		console.log('is node.js');
-// 		// fetch = NodeFetch;
-// 		fetch = await import('node-fetch');
-// 	}
-// };
-// go();
-
-// console.log('client-side?', !!(window));
-// if (window) {
-// 	fetch = window.fetch;
-// } else {
-// 	fetch = NodeFetch;
-// }
 
 // for file uploading
 import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
 import * as FormData from 'form-data';
 
 export class GpTs {
-	// hello = 'world';
 	origin: string; // origin as var for if/when api changes
-	// apiVersion: string; // v1
 	apiKey: string;
 
 	private headers = {
@@ -63,19 +35,18 @@ export class GpTs {
 		},
 	};
 
-	constructor(apiKey: string, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {
+	constructor(apiKey: string, origin = 'https://api.openai.com/v1') {
 		// console.log('GpTs constructed');
 		this.origin = origin;
-		// this.apiVersion = apiVersion;
 		this.setApiKey(apiKey);
 	}
 
 	private setApiKey(apiKey: string) {
 		this.apiKey = apiKey;
-		// TODO update to work for custom endpoint WITHOUT bearer prefixed
 		this.headers.get.Authorization = `Bearer ${this.apiKey}`;
 		this.headers.post.Authorization = `Bearer ${this.apiKey}`;
 
+		// TODO use axios instance for ease
 		// const instance = axios.create({
 		// 	baseURL: 'https://some-domain.com/api/',
 		// 	timeout: 1000,
@@ -89,14 +60,8 @@ export class GpTs {
 		method: 'GET' | 'POST' | 'DELETE' = 'GET',
 		reqOptions?: any
 	): Promise<T> {
-		// const url = `${this.origin}${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
 		const url = `${this.origin}/${endpoint}`; // ex: https://api.openai.com/v1/engines
-		// const res = await fetch(url, {
-		// 	method: method,
-		// 	// headers: method == 'POST' ? this.headers.post : this.headers.get,
-		// 	headers: this.headers.post,
-		// 	body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null,
-		// });
+
 		const res = await axios.request<T>({
 			url,
 			method,
@@ -182,60 +147,24 @@ export class GpTs {
 		const formData = new FormData();
 		formData.append('purpose', purpose);
 		formData.append('file', file);
-		// console.log('formData', formData);
-
-		// const res = await fetch(`${this.origin}${this.apiVersion}/files`, {
-		// const res = await fetch(`${this.origin}/files`, {
-		// 	method: 'POST',
-		// 	body: formData,
-		// 	headers: {
-		// 		Authorization: `Bearer ${this.apiKey}`,
-		// 		// removing content-type header makes file upload work... strange
-		// 		// 'Content-Type': 'multipart/form-data'
-		// 	},
-		// });
-
-		// const res = await axios.post(`${this.origin}/files`, formData, {
-		// 	// method: 'POST',
-		// 	// data: formData,
-		// 	headers: {
-		// 		Authorization: `Bearer ${this.apiKey}`,
-		// 		// removing content-type header makes file upload work... strange
-		// 		'Content-Type': 'multipart/form-data',
-		// 	},
-		// });
-
-		// console.log('boundary', (formData as any)._boundary);
-		// console.log('boundary', formData.getBoundary());
 		const boundary = formData.getBoundary();
 
 		const res = await axios({
 			url: `${this.origin}/files`,
 			method: 'POST',
 			data: formData,
-			// form: formData,
-			// responseType: 'document',
 			headers: {
 				Authorization: `Bearer ${this.apiKey}`,
 				// form-data POST doesnt work without BOUNDARY !
 				'Content-Type': `multipart/form-data; boundary=${boundary}`,
-				// no
-				// 'Content-Type': `multipart/form-data; boundary=${formData.getBoundary}`,
 			},
 		});
-		// console.log('rrrr', res.request.data.error);
-		// console.log('res:', res);
-		// console.log('heads:', res.headers);
-		// for (const h in res.headers) {
-		// 	console.log('h', h, res.headers.get(h));
-		// }
 
 		if (res.status == 401) {
 			throw 'invalid api key';
 		} else if (res.status !== 200) {
 			throw 'request err';
 		} else {
-			// const json: FileUploadResponse = await res.json();
 			const json = res.data;
 			return json;
 		}
