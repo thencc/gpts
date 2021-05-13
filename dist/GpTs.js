@@ -11,24 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GpTs = void 0;
 // in case this is not the web, import fetch for node
-// if (!window) {
-// 	import fetch from 'node-fetch';
-// }
-// import * as NodeFetch from 'node-fetch';
-// let fetch: typeof NodeFetch | typeof window.fetch;
-let fetch;
-const go = () => __awaiter(void 0, void 0, void 0, function* () {
-    if (typeof window !== 'undefined') {
-        console.log('is browser');
-        fetch = window.fetch;
-    }
-    else {
-        console.log('is node.js');
-        // fetch = NodeFetch;
-        fetch = yield Promise.resolve().then(() => require('node-fetch'));
-    }
-});
-go();
+const axios_1 = require("axios");
 const FormData = require("form-data");
 class GpTs {
     constructor(apiKey, origin = 'https://api.openai.com/v1', apiVersion = '/v1') {
@@ -51,17 +34,29 @@ class GpTs {
         // TODO update to work for custom endpoint WITHOUT bearer prefixed
         this.headers.get.Authorization = `Bearer ${this.apiKey}`;
         this.headers.post.Authorization = `Bearer ${this.apiKey}`;
+        // const instance = axios.create({
+        // 	baseURL: 'https://some-domain.com/api/',
+        // 	timeout: 1000,
+        // 	headers: { 'X-Custom-Header': 'foobar' },
+        // });
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(endpoint, method = 'GET', reqOptions) {
         return __awaiter(this, void 0, void 0, function* () {
             // const url = `${this.origin}${this.apiVersion}/${endpoint}`; // ex: https://api.openai.com/v1/engines
             const url = `${this.origin}/${endpoint}`; // ex: https://api.openai.com/v1/engines
-            const res = yield fetch(url, {
-                method: method,
-                // headers: method == 'POST' ? this.headers.post : this.headers.get,
+            // const res = await fetch(url, {
+            // 	method: method,
+            // 	// headers: method == 'POST' ? this.headers.post : this.headers.get,
+            // 	headers: this.headers.post,
+            // 	body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null,
+            // });
+            const res = yield axios_1.default.request({
+                url,
+                method,
                 headers: this.headers.post,
-                body: method == 'POST' ? JSON.stringify(reqOptions || {}) : null,
+                responseType: 'json',
+                data: method == 'POST' ? reqOptions : null,
             });
             if (res.status == 401) {
                 throw 'invalid api key';
@@ -73,32 +68,32 @@ class GpTs {
                 throw 'request err';
             }
             else {
-                const json = yield res.json();
+                const json = res.data;
                 return json;
             }
         });
     }
     engineList() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.request('engines'));
+            return yield this.request('engines');
         });
     }
     engineRetrieve(engineId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.request(`engines/${engineId}`));
+            return yield this.request(`engines/${engineId}`);
         });
     }
     completion(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const engineId = options.engineId;
-            delete options.engineId; // some endpoints err if you pass in this
-            return (yield this.request(`engines/${engineId}/completions`, 'POST', options));
+            delete options.engineId; // some openai endpoints err if you pass in extra params
+            return yield this.request(`engines/${engineId}/completions`, 'POST', options);
         });
     }
     // TODO: https://beta.openai.com/docs/api-reference/completions/create-via-get
     completionStream(engineId, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('TODO');
+            console.warn('TODO - completionStream');
             return;
         });
     }
@@ -106,7 +101,7 @@ class GpTs {
         return __awaiter(this, void 0, void 0, function* () {
             const engineId = options.engineId;
             delete options.engineId; // some endpoints err if you pass in this
-            return (yield this.request(`engines/${engineId}/search`, 'POST', options));
+            return yield this.request(`engines/${engineId}/search`, 'POST', options);
         });
     }
     classification(options) {
@@ -115,7 +110,7 @@ class GpTs {
             delete options.engineId; // some endpoints err if you pass in this
             // openai mixes up model / engineId here?
             const opts = Object.assign({ model: engineId }, options);
-            return (yield this.request('classifications', 'POST', opts));
+            return yield this.request('classifications', 'POST', opts);
         });
     }
     answer(options) {
@@ -124,12 +119,12 @@ class GpTs {
             delete options.engineId; // some endpoints err if you pass in this
             // openai mixes up model / engineId here?
             const opts = Object.assign({ model: engineId }, options);
-            return (yield this.request('answers', 'POST', opts));
+            return yield this.request('answers', 'POST', opts);
         });
     }
     fileList() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.request('files'));
+            return yield this.request('files');
         });
     }
     // backend: file is fs.ReadStream (node.js)
@@ -141,16 +136,47 @@ class GpTs {
             formData.append('file', file);
             // console.log('formData', formData);
             // const res = await fetch(`${this.origin}${this.apiVersion}/files`, {
-            const res = yield fetch(`${this.origin}/files`, {
+            // const res = await fetch(`${this.origin}/files`, {
+            // 	method: 'POST',
+            // 	body: formData,
+            // 	headers: {
+            // 		Authorization: `Bearer ${this.apiKey}`,
+            // 		// removing content-type header makes file upload work... strange
+            // 		// 'Content-Type': 'multipart/form-data'
+            // 	},
+            // });
+            // const res = await axios.post(`${this.origin}/files`, formData, {
+            // 	// method: 'POST',
+            // 	// data: formData,
+            // 	headers: {
+            // 		Authorization: `Bearer ${this.apiKey}`,
+            // 		// removing content-type header makes file upload work... strange
+            // 		'Content-Type': 'multipart/form-data',
+            // 	},
+            // });
+            // console.log('boundary', (formData as any)._boundary);
+            // console.log('boundary', formData.getBoundary());
+            const boundary = formData.getBoundary();
+            const res = yield axios_1.default({
+                url: `${this.origin}/files`,
                 method: 'POST',
-                body: formData,
+                data: formData,
+                // form: formData,
+                // responseType: 'document',
                 headers: {
                     Authorization: `Bearer ${this.apiKey}`,
-                    // removing content-type header makes file upload work... strange
-                    // 'Content-Type': 'multipart/form-data'
+                    // form-data POST doesnt work without BOUNDARY !
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                    // no
+                    // 'Content-Type': `multipart/form-data; boundary=${formData.getBoundary}`,
                 },
             });
-            // console.log('res', res);
+            // console.log('rrrr', res.request.data.error);
+            // console.log('res:', res);
+            // console.log('heads:', res.headers);
+            // for (const h in res.headers) {
+            // 	console.log('h', h, res.headers.get(h));
+            // }
             if (res.status == 401) {
                 throw 'invalid api key';
             }
@@ -158,21 +184,22 @@ class GpTs {
                 throw 'request err';
             }
             else {
-                const json = yield res.json();
+                // const json: FileUploadResponse = await res.json();
+                const json = res.data;
                 return json;
             }
         });
     }
     fileRetrieve(fileId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.request(`files/${fileId}`));
+            return yield this.request(`files/${fileId}`);
         });
     }
     // "Only owners of organizations can delete files currently." (https://beta.openai.com/docs/api-reference/files/delete)
     // not sure about the return type here as i am not an org owner
     fileDelete(fileId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.request(`files/${fileId}`, 'DELETE'));
+            return yield this.request(`files/${fileId}`, 'DELETE');
         });
     }
 }
