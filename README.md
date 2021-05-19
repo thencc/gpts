@@ -24,11 +24,11 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
 
 ## install
 
-### npm
+### [npm](https://www.npmjs.com/package/gpts)
 
 `npm i gpts`
 
-### github
+### [github](https://github.com/thencc/gpts)
 
 `package.json`
 
