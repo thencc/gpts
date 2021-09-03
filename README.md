@@ -60,6 +60,10 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
     -   upload ✅ (server-side only)
     -   retrieve ✅
     -   delete ✅
+-   fine-tunes
+    -   prepare dataset ⚠️ (TODO)
+    -   upload dataset ⚠️ (TODO)
+    -   check upload results ⚠️ (TODO)
 
 ---
 
@@ -98,3 +102,4 @@ const brain = new GpTs('ASuperSecretPassword', 'https://company.api-wrappers.io/
 ## TODO
 
 -   support completion streaming SSE (https://beta.openai.com/docs/api-reference/completions/create-via-get)
+-   support fine-tuning management (https://beta.openai.com/docs/guides/fine-tuning/preparing-your-dataset)
