@@ -13,7 +13,7 @@ export declare type BasicResponse = {
 export declare type BasicRequest = {
     engineId: EngineId;
 };
-export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta' | 'content-filter-alpha-c4' | 'content-filter-dev' | 'cursing-filter-v6';
+export declare type EngineId = 'ada' | 'babbage' | 'curie' | 'curie-instruct-beta' | 'davinci' | 'davinci-instruct-beta' | 'content-filter-alpha-c4' | 'content-filter-dev' | 'cursing-filter-v6' | string;
 export declare type Engine = {
     id: EngineId;
     object: ObjectType.engine;
