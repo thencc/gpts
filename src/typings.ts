@@ -5,28 +5,29 @@ export enum ObjectType {
 	'search_result',
 	'classification',
 	'answer',
-	'file'
+	'file',
 }
 
 export type BasicResponse = {
 	object: ObjectType;
-}
+};
 
 export type BasicRequest = {
 	engineId: EngineId;
-}
+};
 
 export type EngineId =
-	'ada' |
-	'babbage' |
-	'curie' |
-	'curie-instruct-beta' |
-	'davinci' |
-	'davinci-instruct-beta' |
+	| 'ada'
+	| 'babbage'
+	| 'curie'
+	| 'curie-instruct-beta'
+	| 'davinci'
+	| 'davinci-instruct-beta'
 	// undocumented:
-	'content-filter-alpha-c4' |
-	'content-filter-dev' |
-	'cursing-filter-v6';
+	| 'content-filter-alpha-c4'
+	| 'content-filter-dev'
+	| 'cursing-filter-v6'
+	| string; // new engines and custom fine-tuned engines will come out all the time...
 
 export type Engine = {
 	id: EngineId;
@@ -39,7 +40,7 @@ export type Engine = {
 	permissions: null;
 	ready_replicas: null;
 	replicas: null;
-}
+};
 
 export type EngineListResponse = {
 	data: Engine[];
@@ -62,7 +63,7 @@ export type CompletionRequest = BasicRequest & {
 	frequency_penalty?: number;
 	best_of?: number;
 	logit_bias?: any; // Record<string, number> // to tinker with
-}
+};
 
 export type CompletionResponse = {
 	id: string;
@@ -75,7 +76,7 @@ export type CompletionResponse = {
 		logprobs: null;
 		finish_reason: string; // 'length' | 'stop' etc...
 	}[];
-}
+};
 
 export type SearchRequest = BasicRequest & {
 	documents?: string[];
@@ -90,13 +91,13 @@ export type SearchResponse = {
 	object: ObjectType.list;
 	// undocumented
 	model: string; // 'ada:2020-05-03'
-}
+};
 
 export type SearchResult = {
 	document: number; // index
 	object: ObjectType.search_result;
 	score: number; // 215.412
-}
+};
 
 export type ClassificationRequest = BasicRequest & {
 	model?: EngineId; // ID of the engine to use for completion
@@ -112,7 +113,7 @@ export type ClassificationRequest = BasicRequest & {
 	return_prompt?: boolean;
 	return_metadata?: boolean;
 	expand?: string[];
-}
+};
 
 export type ClassificationResponse = {
 	completion: string; // 'cmpl-2euN7lUVZ0d4RKbQqRV79IiiE6M1f',
@@ -120,13 +121,12 @@ export type ClassificationResponse = {
 	model: string; // 'curie:2020-05-03',
 	object: ObjectType.classification;
 	search_model: EngineId;
-	selected_examples:
-	{
+	selected_examples: {
 		document: number;
 		label: string;
 		text: string;
 	}[];
-}
+};
 
 export type AnswerRequestBase = BasicRequest & {
 	model?: EngineId; // engineId == model?
@@ -148,11 +148,11 @@ export type AnswerRequestBase = BasicRequest & {
 
 export type AnswerRequestDocuments = AnswerRequestBase & {
 	documents: string[];
-}
+};
 
 export type AnswerRequestFile = AnswerRequestBase & {
 	file: string;
-}
+};
 
 // "You should specify either documents or a file, but not both." (https://beta.openai.com/docs/api-reference/answers/create)
 export type AnswerRequest = AnswerRequestDocuments | AnswerRequestFile;
@@ -163,12 +163,11 @@ export type AnswerResponse = {
 	model: string; // 'curie:2020-05-03',
 	object: ObjectType.answer;
 	search_model: EngineId;
-	selected_documents:
-	{
+	selected_documents: {
 		document: number;
 		text: string;
 	}[];
-}
+};
 
 export type File = {
 	id: string; // 'file-ccdDZrC3iZVNiQVeEA6Z66wf',
@@ -184,7 +183,7 @@ export type File = {
 export type FileListResponse = {
 	data: File[];
 	object: ObjectType.list;
-}
+};
 
 export type FileUploadResponse = File;
 
