@@ -64,6 +64,8 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
     -   prepare dataset ⚠️ (TODO)
     -   upload dataset ⚠️ (TODO)
     -   check upload results ⚠️ (TODO)
+-   embeddings
+    -   create ⚠️ (TODO)
 
 ---
 
