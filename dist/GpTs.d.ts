@@ -1,6 +1,7 @@
 /// <reference types="node" />
-import { AnswerRequest, AnswerResponse, ClassificationRequest, ClassificationResponse, CompletionRequest, CompletionResponse, EngineId, FileListResponse, EngineListResponse, EngineRetrieveResponse, SearchRequest, SearchResponse, FileUploadResponse, FileRetrieveResponse } from './typings';
+import { AnswerRequest, AnswerResponse, ClassificationRequest, ClassificationResponse, CompletionRequest, CompletionResponse, EngineId, FileListResponse, EngineListResponse, EngineRetrieveResponse, SearchRequest, SearchResponse, FileUploadResponse, FileRetrieveResponse, EmbeddingsRequest } from './typings';
 import * as fs from 'fs';
+import { EmbeddingsResponse } from '.';
 export declare class GpTs {
     origin: string;
     apiKey: string;
@@ -19,5 +20,6 @@ export declare class GpTs {
     fileUpload(file: fs.ReadStream, purpose: 'answers' | 'classifications' | 'search'): Promise<FileUploadResponse>;
     fileRetrieve(fileId: string): Promise<FileRetrieveResponse>;
     fileDelete(fileId: string): Promise<void>;
+    embeddings(options: EmbeddingsRequest): Promise<EmbeddingsResponse>;
 }
 export default GpTs;

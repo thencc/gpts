@@ -1,6 +1,6 @@
 {
 	"name": "gpts",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"description": "typescript wrapper for gpt-3 api",
 	"keywords": [
 		"gpt",
