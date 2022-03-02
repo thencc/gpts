@@ -60,12 +60,12 @@ also see [demo/index.ts](https://github.com/thencc/gpts/blob/main/demo/index.ts)
     -   upload ✅ (server-side only)
     -   retrieve ✅
     -   delete ✅
+-   embeddings
+    -   create ✅
 -   fine-tunes
     -   prepare dataset ⚠️ (TODO)
     -   upload dataset ⚠️ (TODO)
     -   check upload results ⚠️ (TODO)
--   embeddings
-    -   create ⚠️ (TODO)
 
 ---
 

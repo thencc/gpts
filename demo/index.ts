@@ -10,6 +10,10 @@ import * as path from 'path';
 
 (async () => {
 	const openai_apiKey = ''; // "sk-123..."
+	if (!openai_apiKey) {
+		console.error('no apiKey provided');
+		return;
+	}
 
 	const c = new GpTs(openai_apiKey);
 	// console.log('c', c);
@@ -59,7 +63,7 @@ import * as path from 'path';
 		// });
 
 		// files
-		const s = await c.fileList();
+		// const s = await c.fileList();
 
 		// const f = fs.createReadStream(path.join(__dirname, './answers-file.jsonl'));
 		// const s = await c.fileUpload(f, 'answers');
@@ -67,6 +71,17 @@ import * as path from 'path';
 		// const s = await c.fileRetrieve('file-2U2KDdN8yezg4LY18C2IZ3Gx');
 
 		// const s = await c.fileDelete('file-2U2KDdN8yezg4LY18C2IZ3Gx');
+
+		// const s = await c.embeddings({
+		// 	engineId: 'text-search-babbage-doc-001', // embeddings models: https://beta.openai.com/docs/guides/embeddings/types-of-embedding-models
+		// 	input: 'the sky is blue'
+		// });
+		// console.log(s.data[0].embedding);
+
+		const s = await c.embeddings({
+			engineId: 'text-search-babbage-query-001', // embeddings models: https://beta.openai.com/docs/guides/embeddings/types-of-embedding-models
+			input: ['the sky is blue', 'grass is green']
+		});
 
 		console.log('s:', s);
 	} catch (e) {

@@ -13,6 +13,7 @@ import {
 	SearchResponse,
 	FileUploadResponse,
 	FileRetrieveResponse,
+	EmbeddingsRequest,
 } from './typings';
 
 import axios from 'axios';
@@ -20,6 +21,7 @@ import axios from 'axios';
 // for file uploading
 import * as fs from 'fs'; // needs "@types/node": "^14.14.37",
 import * as FormData from 'form-data';
+import { EmbeddingsResponse } from '.';
 
 export class GpTs {
 	origin: string; // origin as var for if/when api changes
@@ -178,6 +180,19 @@ export class GpTs {
 	// not sure about the return type here as i am not an org owner
 	async fileDelete(fileId: string): Promise<void> {
 		return await this.request<void>(`files/${fileId}`, 'DELETE');
+	}
+
+	// embeddings aka embeddingsCreate
+	/* FYI gpt3 embeddings:
+		Ada (1024 dimensions)
+		Babbage (2048 dimensions)
+		Curie (4096 dimensions)
+		Davinci (12288 dimensions)
+	 */
+	async embeddings(options: EmbeddingsRequest): Promise<EmbeddingsResponse> {
+		const engineId = options.engineId;
+		delete options.engineId; // some endpoints err if you pass in this
+		return await this.request<EmbeddingsResponse>(`engines/${engineId}/embeddings`, 'POST', options);
 	}
 }
 export default GpTs;
